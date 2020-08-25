@@ -13,7 +13,7 @@ module.exports = {
       logo: {
         alt: 'Codonow',
         src: 'img/whiteLogo.png',
-        href: 'https://codenow.com/,
+        href: 'https://www.codenow.com/',
       },
       items: [
         {
