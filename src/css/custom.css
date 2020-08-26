@@ -7,18 +7,102 @@
 
 /* You can override the default Infima variables here. */
 :root {
-  --ifm-color-primary: #25c2a0;
-  --ifm-color-primary-dark: rgb(33, 175, 144);
-  --ifm-color-primary-darker: rgb(31, 165, 136);
-  --ifm-color-primary-darkest: rgb(26, 136, 112);
-  --ifm-color-primary-light: rgb(70, 203, 174);
-  --ifm-color-primary-lighter: rgb(102, 212, 189);
-  --ifm-color-primary-lightest: rgb(146, 224, 208);
+  --ifm-color-primary: #20273f;
+  --ifm-color-primary-dark: #20273f;
+  --ifm-color-primary-darker: #20273f;
+  --ifm-color-primary-darkest: #20273f;
+  --ifm-color-primary-light: #20273f;
+  --ifm-color-primary-lighter: #20273f;
+  --ifm-color-primary-lightest: #20273f;
   --ifm-code-font-size: 95%;
 }
 
+a {
+  color: #262f4d;
+}
+
+.menu__link {
+  color: #20273f;
+  padding: 10px;
+}
+
+.menu__link:hover {
+  color: rgb(21, 176, 228);
+}
+
+.navbar {
+  background-image: linear-gradient(to right, #191e30, #3a4a7e);
+  height: 99px;
+  font-size: 16px;
+}
+
+.navbar__title {
+  color: white;
+}
+
+.navbar__logo {
+  margin-left: 50px;
+}
+
+.navbar__title:hover {
+  color: whitesmoke;
+  text-decoration: underline;
+}
+
+.navbar__item {
+  color: white;
+  margin-left: 50px;
+}
+
+.navbar__item:hover {
+  color: whitesmoke;
+  text-decoration: underline;
+}
+
+.react-toggle-track {
+  display: none;
+}
+
+.react-toggle-thumb {
+  display: none;
+}
+
+.menu {
+  margin-left: 50px;
+}
+
+.pagination-nav__link:hover {
+  color: rgb(21, 176, 228);
+}
+
+.table-of-contents__link:hover {
+  color: rgb(21, 176, 228);
+}
+
+a:hover {
+  color: rgb(21, 176, 228);
+}
+
+.footer__link-item:hover {
+  color: rgb(21, 176, 228);
+}
+
+.footer {
+  background-color: whitesmoke;
+  text-align: center;
+}
+
+.navbar__logo {
+  min-height: 70px;
+  min-width: 70px;
+}
+
+.paragraph {
+  margin-left: 20px;
+}
+
 .docusaurus-highlight-code-line {
-  background-color: rgb(72, 77, 91);
+  background-color: rgb(5, 68, 204);
   display: block;
   margin: 0 calc(-1 * var(--ifm-pre-padding));
   padding: 0 var(--ifm-pre-padding);
