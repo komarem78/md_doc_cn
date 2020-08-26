@@ -4,7 +4,7 @@ module.exports = {
   url: 'https://your-docusaurus-test-site.com',
   baseUrl: '/',
   onBrokenLinks: 'throw',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/CN-icon-40x42px-dark-forwhite-bg.png',
   organizationName: 'facebook', // Usually your GitHub org/user name.
   projectName: 'docusaurus', // Usually your repo name.
   themeConfig: {
@@ -32,47 +32,46 @@ module.exports = {
         {
           to: 'docs/',
           activeBasePath: 'docs',
-          label: 'Docs',
+          label: 'Documentations',
           position: 'left',
         },
-        {to: 'blog', label: 'Blog', position: 'left'},
-        {
-          href: 'https://github.com/facebook/docusaurus',
-          label: 'GitHub',
-          position: 'right',
-        },
+
       ],
     },
     footer: {
       style: 'light',
       links: [
         {
-          title: 'Docs',
+          title: 'Product',
           items: [
             {
-              label: 'Style Guide',
-              to: 'docs/',
+              label: 'Home page',
+              href: 'https://www.codenow.com/',
             },
             {
-              label: 'Second Doc',
-              to: 'docs/doc2/',
+              label: 'Documentation ',
+              href: 'https://docs.factory.codenow-dev.codenow.com/docs/',
+            },
+            {
+              label: 'Sign up ',
+              href: 'https://www.codenow.com/sign-up/',
             },
           ],
         },
         {
-          title: 'Community',
+          title: 'Why CodeNOW',
           items: [
             {
-              label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/docusaurus',
+              label: 'The Platform',
+              href: 'https://www.codenow.com/the-platform/',
             },
             {
-              label: 'Discord',
-              href: 'https://discordapp.com/invite/docusaurus',
+              label: 'IT leaders',
+              href: 'https://www.codenow.com/it-leaders/',
             },
             {
-              label: 'Twitter',
-              href: 'https://twitter.com/docusaurus',
+              label: 'Business leaders',
+              href: 'https://www.codenow.com/business-leaders/',
             },
           ],
         },
@@ -80,19 +79,16 @@ module.exports = {
           title: 'More',
           items: [
             {
-              label: 'Blog',
-              to: 'blog',
-            },
-            {
-              label: 'GitHub',
-              href: 'https://github.com/facebook/docusaurus',
+              label: 'About us',
+              href: 'https://www.codenow.com/about-us/',
             },
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+      copyright: `© Stratox Cloud Native, s. r. o. 2020. All rights reserved.`,
     },
-  },
+    },
+
   presets: [
     [
       '@docusaurus/preset-classic',
