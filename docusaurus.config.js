@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'My Site',
+  title: 'CodeNOW Documentation',
   tagline: 'The tagline of my site',
   url: 'https://your-docusaurus-test-site.com',
   baseUrl: '/',
@@ -8,6 +8,19 @@ module.exports = {
   organizationName: 'facebook', // Usually your GitHub org/user name.
   projectName: 'docusaurus', // Usually your repo name.
   themeConfig: {
+    colorMode: {
+          // "light" | "dark"
+          defaultMode: 'light',
+
+          // Hides the switch in the navbar
+          // Useful if you want to support a single color mode
+          disableSwitch: true,
+
+          // Should we use the prefers-color-scheme media-query,
+          // using user system preferences, instead of the hardcoded defaultMode
+          respectPrefersColorScheme: false,
+        },
+
     navbar: {
       title: '',
       logo: {
