@@ -1,0 +1,169 @@
+---
+id: micResSerPosSQL
+title: Java Micronaut REST Server with PostgreSQL
+---
+
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
+🕓 45 minutes
+
+## What you’ll learn
+
+How to setup your application for : 
+
+- connecting to PostgreSQL database,
+- getting data from REST API, 
+- providing data to REST API. 
+
+In this tutorial, we will create a simple java component with Java Micronaut Data scaffolder with connection to PostgreSQL database storage. We want to expose a single REST endpoint for getting the basic client data information, creating a microservice CRUD layer above DB storage.
+
+<img alt="clientDataDB" src={useBaseUrl('img/javMicExa/javaMicronautRestServerWithPostgreSql/ClientDataDB.png')}/>
+
+## Project source
+
+This example project can be cloned from: ```git@gitlab.factory.innobank.codenow.com:innobank/client-data-db.git```
+
+## Prerequisites 
+
+- Prepare your local development environment for CodeNOW with Micronaut. 
+  - Follow the tutorial instructions in the [Java Micronaut Local Development](https://vitsestak.github.io/code_now/docs/locDevWitCodNow/locDev/) tutorial.
+- Run PostgreSQL locally. 
+  - Use docker compose as described in the section *Docker compose and third-party tools* of the [Java Micronaut Local Development](https://vitsestak.github.io/code_now/docs/locDevWitCodNow/locDev/) tutorial. 
+- Create a new component
+  - For details see the section *Prerequisites* of the [Java Micronaut Local Development](https://vitsestak.github.io/code_now/docs/locDevWitCodNow/locDev/) tutorial.
+
+## Steps
+
+Open your IDE, import created component and start coding:
+
+- Define jpa entity Client. This simple table will store basic client data:
+  - Generate getters and setters with your IDE
+
+    ```java
+    01  package io.codenow.client.data.db.service.repository.entity;
+    02   
+    03  import java.time.LocalDate;
+    04 
+    05  import javax.persistence.Entity;
+    06  import javax.persistence.GeneratedValue;
+    07  import javax.persistence.Id;
+    08 
+    09  @Entity
+    10  public class Client {
+    11      @Id
+    12      @GeneratedValue
+    13      private Long id;
+    14 
+    15      private String username;
+    16      private String firstname;
+    17      private String surname;
+    18      private LocalDate birthdate;
+    19  }
+    ```
+
+- Create a new ClientRepository, which is a basic CRUD interface for micronaut data DB access:
+
+  ```java
+  01  package io.codenow.client.data.db.service.repository;
+  02   
+  03  import io.codenow.client.data.db.service.repository.entity.Client;
+  04  import io.micronaut.data.jdbc.annotation.JdbcRepository;
+  05  import io.micronaut.data.repository.CrudRepository;
+  06  import io.reactivex.Maybe;
+  07 
+  08 
+  09  @JdbcRepository
+  10  public interface ClientRepository extends CrudRepository<Client, Long> {
+  11      Maybe<Client> findByUsername(String username);
+  12  }
+  ```
+
+- Create a new controller and put all the parts together
+  - For more details about Micronaut controller, see:  https://docs.micronaut.io/latest/guide/index.html#httpServer
+
+    ```java
+    01  package io.codenow.client.data.db.service.controller;
+    02 
+    03  import javax.inject.Inject;
+    04  import javax.validation.constraints.NotNull;
+    05 
+    06  import io.codenow.client.data.db.service.repository.ClientRepository;
+    07  import io.codenow.client.data.db.service.repository.entity.Client;
+    08  import io.micronaut.http.annotation.Consumes;
+    09  import io.micronaut.http.annotation.Controller;
+    10  import io.micronaut.http.annotation.Get;
+    11  import io.micronaut.http.annotation.PathVariable;
+    12  import io.micronaut.http.annotation.Produces;
+    13  import io.micronaut.validation.Validated;
+    14  import io.reactivex.Flowable;
+    15  import io.reactivex.Maybe;
+    16 
+    17  /**
+    18   * ClientDataController.
+    19   */
+    20  @Validated
+    21  @Controller("/db")
+    22  @Produces
+    23  @Consumes
+    24  public class ClientDataController {
+    25 
+    26      private final ClientRepository clientRepository;
+    27   
+    28      @Inject
+    29      public ClientDataController(ClientRepository bookRepository) {
+    30          this.clientRepository = bookRepository;
+    31      }
+    32 
+    33      @Get("/clients")
+    34      public Flowable<Client> listClients() {
+    35          return Flowable.fromIterable(clientRepository.findAll());
+    36      }
+    37 
+    38      @Get("/clients/{username}")
+    39      public Maybe<Client> getClient(@PathVariable @NotNull String username) {
+    40          return clientRepository.findByUsername(username);
+    41 
+    42      }
+    43 
+    44  }
+    ```
+
+- Next prepare database configuration:
+  - Go to the PgAdmin console ([http://localhost:5050](http://localhost:5050) if using compose-postgre from our Local development manual) and create a new db client-db with the scheme **client-data**.
+  - Add maven dependency to your pom.xml
+
+    ```java
+    01  <dependency>
+    02      <groupId>org.postgresql</groupId>
+    03      <artifactId>postgresql</artifactId>
+    04      <version>42.2.11</version>
+    05  </dependency>
+    ```
+
+  - Now change the configuration in *config/application.yaml*:
+  - Fill {db user} and {db password} according to your configuration
+  - Make sure you follow yaml syntax (especially whitespaces)
+
+    ```java
+    01  datasources:
+    02    default:
+    03      url: jdbc:postgresql://localhost:5432/client-db?currentSchema=client-data
+    04      driverClassName: org.postgresql.Driver
+    05      username: {db user}
+    06      password: {db password}
+    07      schema-generate: CREATE
+    08    dialect: POSTGRES
+    ```
+
+- Do not forget to change the swagger.yaml. Check it in the   example project: *src/main/resources/META-INF/swagger/swagger.yaml*
+- Try to build and run the application in your IDE. After startup, you should be able to access your new controller’s swagger: [http://localhost:8080/swagger/index.html](http://localhost:8080/swagger/index.html)
+  - For correct setup, check Readme.md in project root or see the tutorial [Java Micronaut Local Development](https://vitsestak.github.io/code_now/docs/locDevWitCodNow/locDev/), section *Prepare local development IDE*
+
+<img alt="clientDataDBSwagger" src={useBaseUrl('img/javMicExa/javaMicronautRestServerWithPostgreSql/clientDataDB_swagger.png')}/>
+
+## What’s next?
+
+If your code works in the local development, you are ready to push your changes to GIT and try to build and deploy your new component version to the CodeNOW environment. For more information, see [Application Deployment](https://vitsestak.github.io/code_now/docs/admMan/depApp/) and [Monitoring](https://vitsestak.github.io/code_now/docs/admMan/depMon/), just make sure to **change the application.yaml properties from the local to the production setup.**
+
+- Check the [Get New PostgreSQL](https://accounts.google.com/signin/v2/identifier?continue=https%3A%2F%2Fdrive.google.com%2Fa%2Fstratox.cz%2Fopen%3Fid%3D1lgWTgsGxnYmgJqqq21htQjJZ-QrJsgSAnkcGscd_GGE&service=wise&hd=stratox.cz&sacu=1&flowName=GlifWebSignIn&flowEntry=AddSession) user manual to get CodeNOW managed component properties. 
+- See the tutorial [Micronaut REST server with Redis and Kafka](https://vitsestak.github.io/code_now/docs/javMicExa/micResSerRedAndKaf/).

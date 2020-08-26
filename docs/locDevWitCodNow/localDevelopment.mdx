@@ -1,0 +1,32 @@
+---
+id: locDev
+title: Local Development
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import Micronaut from './javaMicronautLocalDevelopment.mdx';
+import Spring from './javaSpringBootLocalDevelopment.mdx';
+import JSReact from './javascriptReactLocalDevelopment.mdx';
+
+### Choose tutorial:
+
+<Tabs
+    defaultValue="mic"
+    values={[
+        {label: 'Micronaut', value: 'mic'},
+        {label: 'Spring Boot', value: 'spring'},
+        {label: 'React', value: 'react'},
+    ]}>
+  <TabItem value="mic">
+    <Micronaut />
+  </TabItem>
+
+  <TabItem value="spring">
+    <Spring />
+  </TabItem>
+
+  <TabItem value="react">
+    <JSReact />
+  </TabItem>
+</Tabs>

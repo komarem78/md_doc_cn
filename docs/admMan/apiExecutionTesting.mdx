@@ -1,0 +1,42 @@
+---
+id: apiExeTes
+title: API execution/testing
+---
+
+import useBaseUrl from "@docusaurus/useBaseUrl";
+
+## Context
+
+After the application deployment, you want to execute components APIs and see the responses.
+
+## Before you begin
+
+- [Deploy your application](https://vitsestak.github.io/code_now/docs/admMan/depApp/)
+
+## Steps
+
+1. See the application detail.
+2. Click on the _Open in Browser_ on the chosen deployed application.
+3. Choose the application component for API execution.
+4. Execute your API’s by the integrated Swagger UI tool
+    - Learn more about the Swagger UI on https://swagger.io/tools/swagger-ui/ or this [youtube demo](https://www.youtube.com/watch?v=Nymyc8-WeHM) can also help.
+    - Often you are looking for traceID from the response header. This traceID e.g. helps you analyze interactions in distributed tracing systems. 
+    -  If your swagger-ui does not reflect latest changes in your component's API, make sure you modified swagger.yml file inside your component. 
+    
+## Screenshots
+
+Step 1
+
+<img alt="api1" src={useBaseUrl('img/admMan/apiExecutionTesting/api1.png')} />
+<br/><br/>
+
+Step 2 and 3
+
+<img alt="api2_3" src={useBaseUrl('img/admMan/apiExecutionTesting/api2.png')} />
+<br/><br/>
+
+Step 4
+
+<img alt="api4_1" src={useBaseUrl('img/admMan/apiExecutionTesting/api4.png')} />
+<br/><br/>
+<img alt="api4_2" src={useBaseUrl('img/admMan/apiExecutionTesting/api4_2.png')} />

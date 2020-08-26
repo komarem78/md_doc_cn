@@ -1,0 +1,154 @@
+---
+id: micResApi
+title: Java Micronaut REST API
+---
+
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
+🕓 45 minutes
+
+## What you’ll learn
+
+How to setup your application for : 
+
+- getting data from REST API, 
+- providing data to REST API.
+
+In this tutorial, we will create a simple Java component with the Java Micronaut scaffolder. We want to expose the single REST endpoint for getting user details for his username only. This will require simple sequential orchestration of two REST services, one to get user authorization privileges and second for basic user details. 
+
+<img alt="clientInfoService" src={useBaseUrl('img/javMicExa/javaMicronautRestApi/ClientInfoService.png')} />
+
+## Project source
+
+This example project can be cloned from: ```git@gitlab.factory.innobank.codenow.com:innobank/client-info-service.git```
+
+## Prerequisites
+
+- Prepare your local development environment for CodeNOW with Micronaut. 
+  - Follow the tutorial instructions in the [Java Micronaut Local Development](https://vitsestak.github.io/code_now/docs/locDevWitCodNow/locDev/) tutorial.
+- Create a new component
+  - For details, see the section *Prerequisites* of the [Java Micronaut Local Development](https://vitsestak.github.io/code_now/docs/locDevWitCodNow/locDev/) tutorial.
+
+## Steps
+
+Open your IDE, import the created component and start coding:
+
+- Define the message payload. Here is an example of the GetClientInfoResponse, which is a simple POJO with basic user details and roles:
+  - Generate getters and setters with your IDE.
+  - Examples of GetClientDataResponse and GetClientRolesResponse can be found in the example project repository.
+
+    ```java
+    01  package io.codenow.client.info.service.model;
+    02   
+    03  import java.time.LocalDate;
+    04  import java.util.Set;
+    05   
+    06  public class GetClientInfoResponse {
+    07 
+    08      private String firstname;
+    09      private String surname;
+    10      private LocalDate birthdate;
+    11      private Set<String> roles;
+    12  }
+    ```
+
+- Next, create http clients for calling the orchestrated endpoints. Example for ClientDataServiceClient:
+  - The second required client ClientAuthorizationServiceClient can be found in the example project repository
+  - For more details about Micronaut clients: [https://docs.micronaut.io/latest/guide/http<Client.html#clientAnnotation](https://docs.micronaut.io/latest/guide/httpClient.html#clientAnnotation)
+  - Create a new Java interface:
+
+    ```java
+    01  package io.codenow.client.info.service.clients;
+    02 
+    03  import io.codenow.client.info.service.model.GetClientDataResponse;
+    04  import io.micronaut.http.annotation.Get;
+    05  import io.micronaut.http.annotation.PathVariable;
+    06  import io.micronaut.http.client.annotation.Client;
+    07  import io.reactivex.Single;
+    08 
+    09  @Client("http://client-data-service")
+    10  public interface ClientDataServiceClient {
+    11 
+    12      @Get("/data/{username}")
+    13      public Single<GetClientDataResponse> getClientData(@PathVariable String username);
+    14  }
+    ```
+
+- Create a new controller and put all the parts together
+  - For more details, see https://docs.micronaut.io/latest/guide/index.html#httpServer
+
+    ```java
+    01  package io.codenow.client.info.service.controller;
+    02 
+    03 
+    04  import java.util.Set;
+    05 
+    06  import org.slf4j.Logger;
+    07  import org.slf4j.LoggerFactory;
+    08 
+    09  import io.codenow.client.info.service.clients.ClientAuthorizationServiceClient;
+    10  import io.codenow.client.info.service.clients.ClientDataServiceClient;
+    11  import io.codenow.client.info.service.model.GetClientDataResponse;
+    12  import io.codenow.client.info.service.model.GetClientInfoResponse;
+    13  import io.codenow.client.info.service.model.GetClientRolesResponse;
+    14  import io.micronaut.http.annotation.Consumes;
+    15  import io.micronaut.http.annotation.Controller;
+    16  import io.micronaut.http.annotation.Get;
+    17  import io.micronaut.http.annotation.PathVariable;
+    18  import io.micronaut.http.annotation.Produces;
+    19  import io.micronaut.validation.Validated;
+    20  import io.reactivex.Single;
+    21   
+    22 
+    23  @Validated
+    24  @Controller("/info")
+    25  public class ClientInfoController {
+    26 
+    27      private static final Logger LOG = LoggerFactory.getLogger(ClientInfoController.class);
+    28     
+    29      private ClientAuthorizationServiceClient clientAuthorizationServiceClient;
+    30      private ClientDataServiceClient clientDataServiceClient;
+    31     
+    32      public ClientInfoController(ClientAuthorizationServiceClient clientAuthorizationServiceClient,
+    33           ClientDataServiceClient clientDataServiceClient) {
+    34       super();
+    35       this.clientAuthorizationServiceClient = clientAuthorizationServiceClient;
+    36       this.clientDataServiceClient = clientDataServiceClient;
+    37      }
+    38 
+    39      @Get("/{username}")
+    40      @Produces
+    41      @Consumes
+    42      public Single<GetClientInfoResponse> getClientInfo(@PathVariable String username) {
+    43       LOG.info("username: {}", username);
+    44 
+    45       Single<GetClientRolesResponse> rolesResp = clientAuthorizationServiceClient.getClientRoles(username);
+    46       Single<GetClientDataResponse> clientDataResp = clientDataServiceClient.getClientData(username);
+    47      
+    48       Set<String> roles = rolesResp.blockingGet().getRoles();
+    49       GetClientInfoResponse response = new GetClientInfoResponse();
+    50       response.setRoles(roles);
+    51       GetClientDataResponse info = clientDataResp.blockingGet();
+    52       response.setBirthdate(info.getBirthdate());
+    53       response.setFirstname(info.getFirstname());
+    54       response.setSurname(info.getSurname());
+    55 
+    56          return Single.just(response);
+    57      }
+    58  }
+    ```
+
+- Do not forget to change the swagger.yaml. Check it in the example project: *src/main/resources/META-INF/swagger/swagger.yaml*
+- Try to build and run the application in your IDE. After startup, you should be able to access your new controller’s swagger: **[http://localhost:8080/swagger/index.html](http://localhost:8080/swagger/index.html)**
+  - For the correct setup, check the Readme.md in the project root or see the tutorial [Java Micronaut Local Development](https://vitsestak.github.io/code_now/docs/locDevWitCodNow/locDev/), section *Prepare local development IDE*
+  - The component exposes a simple GET endpoint and can be tested using a browser call only. You should not forget to document your API and use the swagger-ui accordingly.
+
+<img alt="clientInfoServiceSwagger" src={useBaseUrl('img/javMicExa/javaMicronautRestApi/clientInformationService_swagger.png')} />
+
+## What’s next?
+
+If your code works in the local development, you are ready to push your changes to GIT and try to build and deploy your new component version to the CodeNOW environment. For more information, see [Application Deployment](https://vitsestak.github.io/code_now/docs/admMan/depApp/) and [Monitoring](https://vitsestak.github.io/code_now/docs/admMan/depMon/).
+
+See our other developer guides to get orchestrated microservices [Micronaut REST Server with PostgreSQL](https://vitsestak.github.io/code_now/docs/javMicExa/micResSerPosSQL/) and [Micronaut REST Server with Redis and Kafka](https://vitsestak.github.io/code_now/docs/javMicExa/micResSerRedAndKaf/) working.
+
+

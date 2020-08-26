@@ -1,0 +1,52 @@
+---
+id: sprLocDev
+title: Java Spring Boot – Local Development
+---
+
+🕓 30 minutes 
+
+## What you’ll learn
+
+How to set up your local development environment for:
+
+- Java Spring Boot component development. 
+- Run the developed component in the local development mode on your machine.
+
+## Prerequisites
+
+- Create a new CodeNOW component in your application.
+    - Use the Java Spring Boot scaffolder.
+    - See the *[How to Create a New Application Component](https://vitsestak.github.io/code_now/docs/admMan/creNewCom/)* tutorial.
+
+## Prepare local development IDE
+
+- Clone code from the created git repository to your local machine.
+- Use your favourite IDE and import repository as a maven project. You will require:
+  - Java 11+
+  - Enable Maven support in your IDE and install Apache maven (if required) – http://maven.apache.org/ide.html 
+
+
+- To run the project in the local development setup, check README.md . The required minimum is to set the path to Micronaut configuration file as a JVM startup parameter:
+  - ```-Dspring.config.location=file:./config/application.yaml```
+    - Check the Run configuration dialog in your IDE and set this line as a VM argument
+  - NOTE: You can also configure this server to listen on a custom port (the default port is 8080).
+    - ```-Dserver.port=9090```
+    - This comes in handy when running multiple projects at once, which is very common with micro-service oriented architecture.
+    
+
+- Start Run/Debug in your IDE.
+    - The component should successfully start up with port 8080 exposed
+    - Check swagger-ui by clicking on [http://localhost:8080/swagger/index.html](http://localhost:8080/swagger/index.html)
+      - For more information about Swagger UI check: https://swagger.io/tools/swagger-ui/
+      - Swagger UI is used as a simple swagger presentation UI.
+      - Any changes made in the code are automatically propagated to swagger-ui (courtesy of [SpringFox](https://springfox.github.io/springfox/)).
+      - The same swagger UI is used as the documentation tool and is also an easy way to test the functionality of your component’s API.
+
+## Docker compose and third-party tools
+
+Some manuals for CodeNOW work with different third-party components like Apache Kafka or Redis. The easiest way for local development is to download the publicly available docker compose receipts. Some examples used during the writing of this manual:
+
+- More about docker compose: https://docs.docker.com/compose/install/
+- Kafka with Kafdrop: https://github.com/StratoxEnterprises/oxus-docker-kafka-dev.git
+- Redis with Redis Commander: https://github.com/ikknd/docker-study.git
+- PostgreSQL with PgAdmin: https://github.com/khezen/compose-postgres.git

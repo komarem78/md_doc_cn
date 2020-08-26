@@ -1,0 +1,103 @@
+---
+id: depApp
+title: Deploy application
+---
+
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
+🕓 10 minutes
+
+## What you’ll learn
+
+How to deploy the application into the CodeNOW environment. 
+
+## Prerequisites
+
+- [Created application and application components](https://vitsestak.github.io/code_now/docs/admMan/creNewApp/)
+- Improve application components code
+
+## Steps
+
+1. Build a new component version
+    - An application release has to contain only released components because it makes clear which fixed bugs and newly developed features are contained in a particular build.
+    - A released component:
+      - is tagged in git,
+      - has updated its pom.xml descriptors,
+      - is uploaded to the nexus artifact repository.
+    - Developers can check the build progress in CI/CD Builds Overview.
+2. See the result of code quality check
+    - SonarQube is the most popular open-source tool for static code analysis and is integrated into CodeNOW. See more about the [SonarQube](https://docs.sonarqube.org/latest/). 
+    - Let’s use the default oxus-java profile for quality check.
+    - Code quality check is a good first-line measure to evaluate overall code quality.
+    - Defining quality gateways help for first glance decisions on whether the code is release-ready.
+    - If the code quality is too low, improve your code and build a new component version (STEP 1)
+3. Repeat STEP 1 and STEP 2 for each improved application component
+4. Create an application package
+    - Define application package version.
+    - Select which components (and which version of components) to include in the application package.
+      - An application package consists of an individual component released builds with individual build versions.
+      - An application package is merely a descriptor, so far no real deployment exists.
+      - An application as an orchestration of components is delivered to the selected environment as the whole package.
+5. Define deployment configuration
+    - Select the target environment and application package version. 
+      - The default configuration uses application.yml from each component.
+      - Explicit configuration for each environment should not be required if you use dns endpoint names, ie http://component-name
+      - If required, configuration for local development is possible using profiles and application-{profile}.yml configuration file.
+6. Deploy the application. 
+
+## Screenshots
+
+Step 1.1
+
+<img alt="dep1.1" src={useBaseUrl('img/admMan/deployApplication/dep1_1.png')} />
+<br/><br/>
+
+Step 1.2
+
+<img alt="dep1.2" src={useBaseUrl('img/admMan/deployApplication/dep1_2.png')} />
+<br/><br/>
+
+Step 1.3
+
+<img alt="dep1.3" src={useBaseUrl('img/admMan/deployApplication/dep1_3.png')} />
+<br/><br/>
+
+Step 1.4
+
+<img alt="dep1.4" src={useBaseUrl('img/admMan/deployApplication/dep1_4.png')} />
+<br/><br/>
+
+Step 1.5
+
+<img alt="dep1.5" src={useBaseUrl('img/admMan/deployApplication/dep1_5.png')} />
+<br/><br/>
+
+Step 2.1
+
+<img alt="dep2.1" src={useBaseUrl('img/admMan/deployApplication/dep2_1.png')} />
+<br/><br/>
+
+Step 2.2
+
+<img alt="dep2.2" src={useBaseUrl('img/admMan/deployApplication/dep2_2.png')} />
+<br/><br/>
+
+Step 4.1
+
+<img alt="dep4.1" src={useBaseUrl('img/admMan/deployApplication/dep4_1.png')} />
+<br/><br/>
+
+Step 4.2
+
+<img alt="dep4.2" src={useBaseUrl('img/admMan/deployApplication/dep4_2.png')} />
+<br/><br/>
+
+Step 5.1
+
+<img alt="dep5.1" src={useBaseUrl('img/admMan/deployApplication/dep5_1.png')} />
+<br/><br/>
+
+Step 5.2
+
+<img alt="dep5.2" src={useBaseUrl('img/admMan/deployApplication/dep5_2.png')} />
+<br/><br/>

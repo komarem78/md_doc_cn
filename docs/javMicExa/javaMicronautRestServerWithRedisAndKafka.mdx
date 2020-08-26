@@ -1,0 +1,181 @@
+---
+id: micResSerRedAndKaf
+title: Java Micronaut REST Server with Redis and Kafka
+---
+
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
+🕓 40 minutes
+
+## What you will learn
+
+How to setup your application for : 
+
+- connecting to Redis,
+- connecting to Kafka and publishing messages to its topic,
+- getting data from REST API, 
+- providing data to REST API. 
+
+In this tutorial, we will create a simple java component with the Java Micronaut scaffolder. We want to expose a single REST endpoint for getting user authorization roles. As roles are stored in Redis key-value store, we need a client configuration for our component. Any access to information about user roles should be logged in a Kafka topic, so we need a Kafka client configuration too.
+
+
+<img alt="clientAuthorizationService" src={useBaseUrl('img/javMicExa/javaMicronautRestServerWithRedisAndKafka/ClientAuthorizationService.png')}/>
+
+## Project source
+
+This example project can be cloned from: ```git@gitlab.factory.innobank.codenow.com:innobank/client-authorization-service.git```
+
+## Prerequisites
+
+- Prepare your local development environment for CodeNOW with Micronaut. 
+  - Follow the tutorial instructions in the [Java Micronaut Local Development](https://vitsestak.github.io/code_now/docs/locDevWitCodNow/locDev/) tutorial.
+- Run Kafka and Redis locally. 
+  - Use docker compose as described in the section *Docker compose and third-party tools* of the [Java Micronaut Local Development](https://vitsestak.github.io/code_now/docs/locDevWitCodNow/locDev/) tutorial. 
+- Create a new component
+  - For details see the section *Prerequisites* of the [Java Micronaut Local Development](https://vitsestak.github.io/code_now/docs/locDevWitCodNow/locDev/) tutorial.
+
+## Steps
+
+Open your IDE, import created component and start coding:
+
+- Define message payload. Here is an example of UserAuthorizationResponse, which is a simple POJO with user roles:
+  - generate getters and setters with your IDE
+
+   ```java
+   01  package io.codenow.client.authorization.service.model;    
+   02
+   03  import java.util.Set;
+   04
+   05  public class UserAuthorizationResponse {
+   06
+   07          private Set<String> roles;
+   08
+   09  }
+   ```
+
+
+- Next prepare the configuration for the kafka logging client:
+  - Go to the Kafka administration console ([http://localhost:9000](http://localhost:9000) if using kafdrop from our Local development manual) and create a new topic **client-logging**
+  - Add maven dependency to your pom.xml
+
+    ```java
+    01  <dependency>
+    02    <groupId>io.micronaut.kafka</groupId>
+    03    <artifactId>micronaut-kafka</artifactId>
+    04    <version>2.0.0</version>
+    05  </dependency>
+    ```
+
+
+- For more details about micronaut-kafka, see: https://micronaut-projects.github.io/micronaut-kafka/latest/guide/
+- Now use the code below to create a logging client:
+
+  ```java
+  01  package io.codenow.client.authorization.service.logging;
+  02  
+  03  import io.micronaut.configuration.kafka.annotation.KafkaClient;
+  04  import io.micronaut.configuration.kafka.annotation.KafkaKey;
+  05  import io.micronaut.configuration.kafka.annotation.Topic;
+  06 
+  07  @KafkaClient
+  08  public interface LoggingClient {
+  09 
+  10     void log(@Topic String topic, @KafkaKey String key, String msg);
+  11  }
+  ``` 
+
+- Next prepare the configuration for the Redis client:
+  - For more details about Micronaut Redis, see: https://micronaut-projects.github.io/micronaut-redis/snapshot/guide/ 
+  - Add maven dependency to your pom.xml
+
+    ```java
+    01  <dependency>
+    02    <groupId>io.micronaut.redis</groupId>
+    03    <artifactId>micronaut-redis-lettuce</artifactId>
+    04    <version>2.0.0</version>
+    05  </dependency>
+    ```
+
+- Create a new controller and put all the parts together
+  - For more details about Micronaut controller, see:  https://docs.micronaut.io/latest/guide/index.html#httpServer
+
+    ```java
+    01  package io.codenow.client.authorization.service.controller;
+    02 
+    03 
+    04  import java.util.List;
+    05  import java.util.TreeSet; 
+    06 
+    07  import javax.inject.Inject;
+    08 
+    09  import io.codenow.client.authorization.service.logging.LoggingClient;
+    10  import io.codenow.client.authorization.service.model.UserAuthorizationResponse;
+    11  import io.lettuce.core.api.StatefulRedisConnection;
+    12  import io.lettuce.core.api.sync.RedisCommands;
+    13  import io.micronaut.context.annotation.Value;
+    14  import io.micronaut.http.annotation.Consumes;
+    15  import io.micronaut.http.annotation.Controller;
+    16  import io.micronaut.http.annotation.Get;
+    17  import io.micronaut.http.annotation.PathVariable;
+    18  import io.micronaut.http.annotation.Produces;
+    19  import io.micronaut.validation.Validated;
+    20  import io.reactivex.Single; 
+    21 
+    22  /**
+    23   * UserAuthorizationController.
+    24   */
+    25  @Validated
+    26  @Controller("/user")
+    27  public class UserAuthorizationController {
+    28     
+    29      @Inject private StatefulRedisConnection<String, String> connection;
+    30      @Inject private LoggingClient loggingClient;
+    31      @Value("${kafka.topic.name}") private String kafkaTopicName;
+    32      @Value("${kafka.topic.key}") private String kafkaTopicKey;
+    33 
+    34      @Get("/{username}")
+    35      @Produces
+    36      @Consumes
+    37      public Single<UserAuthorizationResponse> greeting(@PathVariable String username) {
+    38      
+    39       loggingClient.log(kafkaTopicName, kafkaTopicKey, username);
+    40 
+    41          final UserAuthorizationResponse response = new UserAuthorizationResponse();
+    42          RedisCommands<String, String> commands = connection.sync();
+    43          List<String> privileges = commands.lrange(username, 0L, 1000L);
+    44          response.setRoles(new TreeSet<>(privileges));
+    45      
+    46          return Single.just(response);
+    47      }
+    48  }
+    ```
+
+- Last but not least, append the configuration for Kafka and Redis to *config/application.yaml*
+  - Note that this configuration depends on your local development setup for Kafka and Redis and can be different case-by-case
+  - Make sure you follow yaml syntax (especially whitespaces)
+
+    ```java
+    01  redis:
+    02    uri: redis://localhost:6379
+    03 
+    04  kafka:
+    05    bootstrap:
+    06      servers: localhost:29092
+    07    topic:
+    08      name: client-logging
+    09      key: client-authorization-service
+    ```
+
+- Do not forget to change the swagger.yaml. Check it in the example project: *src/main/resources/META-INF/swagger/swagger.yaml*
+- Try to build and run application in your IDE. After startup, you should be able to access your new controller’s swagger: **[http://localhost:8080/swagger/index.html](http://localhost:8080/swagger/index.html)**
+  - For correct setup, check Readme.md in project root or see tutorial [Java Micronaut Local Development](https://vitsestak.github.io/code_now/docs/locDevWitCodNow/locDev/), section *Prepare local development IDE*  
+
+<img alt="ClientAuthorizationServiceSwagger" src={useBaseUrl('img/javMicExa/javaMicronautRestServerWithRedisAndKafka/clientAuthorizationService_swagger.png')}/>
+
+## What’s next?
+
+If your code works in the local development, you are ready to push your changes to GIT and try to build and deploy your new component version to the CodeNOW environment. For more information see [Application Deployment](https://vitsestak.github.io/code_now/docs/admMan/depApp/) and [Monitoring](https://vitsestak.github.io/code_now/docs/admMan/depMon/), just make sure to **change the application.yaml properties from the local to the production setup.**
+
+- check [Get New Redis](https://vitsestak.github.io/code_now/docs/manComAdm/getNewRed) and [Get New Apache Kafka](https://vitsestak.github.io/code_now/docs/manComAdm/getNewApaKaf) for setup in the CodeNOW environment
+
+

@@ -1,0 +1,34 @@
+---
+id: sshSet
+title: SSH settings
+---
+
+import useBaseUrl from '@docusaurus/useBaseUrl'
+
+## Context
+
+As a developer, I need to have secured access to the application source code stored in Git.
+
+## Steps
+
+1. If you don’t already have an SSH key, you can [generate a new SSH key](https://www.atlassian.com/git/tutorials/git-ssh).
+2. Add the public SSH key to your profile settings.
+3. Replace parameter $YourFactoryName and add the following configuration into your ~/.ssh/config.
+
+  ```
+  Host gitlab.factory.innobank.codenow.com
+    Preferredauthentications publickey
+    Port 22
+    IdentityFile ~/.ssh/your_generated_ssh_key
+  ```
+
+## Screenshots
+
+Step 2.1
+
+<img alt="" src={useBaseUrl('img/useAdm/sshSettings/ssh1.png')} />
+<br/><br/>
+
+Step 2.2
+
+<img alt="" src={useBaseUrl('img/useAdm/sshSettings/ssh2.png')} />
