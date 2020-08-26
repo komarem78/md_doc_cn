@@ -26,11 +26,11 @@ This example project can be cloned from: ```git@gitlab.factory.innobank.codenow.
 ## Prerequisites 
 
 - Prepare your local development environment for CodeNOW with Micronaut. 
-  - Follow the tutorial instructions in the [Java Micronaut Local Development](https://vitsestak.github.io/code_now/docs/locDevWitCodNow/locDev/) tutorial.
+  - Follow the tutorial instructions in the [Java Micronaut Local Development](../locDevWitCodNow/locDev/) tutorial.
 - Run PostgreSQL locally. 
-  - Use docker compose as described in the section *Docker compose and third-party tools* of the [Java Micronaut Local Development](https://vitsestak.github.io/code_now/docs/locDevWitCodNow/locDev/) tutorial. 
+  - Use docker compose as described in the section *Docker compose and third-party tools* of the [Java Micronaut Local Development](../locDevWitCodNow/locDev/) tutorial.
 - Create a new component
-  - For details see the section *Prerequisites* of the [Java Micronaut Local Development](https://vitsestak.github.io/code_now/docs/locDevWitCodNow/locDev/) tutorial.
+  - For details see the section *Prerequisites* of the [Java Micronaut Local Development](../locDevWitCodNow/locDev/) tutorial.
 
 ## Steps
 
@@ -157,13 +157,13 @@ Open your IDE, import created component and start coding:
 
 - Do not forget to change the swagger.yaml. Check it in the   example project: *src/main/resources/META-INF/swagger/swagger.yaml*
 - Try to build and run the application in your IDE. After startup, you should be able to access your new controller’s swagger: [http://localhost:8080/swagger/index.html](http://localhost:8080/swagger/index.html)
-  - For correct setup, check Readme.md in project root or see the tutorial [Java Micronaut Local Development](https://vitsestak.github.io/code_now/docs/locDevWitCodNow/locDev/), section *Prepare local development IDE*
+  - For correct setup, check Readme.md in project root or see the tutorial [Java Micronaut Local Development](../locDevWitCodNow/locDev/), section *Prepare local development IDE*
 
 <img alt="clientDataDBSwagger" src={useBaseUrl('img/javMicExa/javaMicronautRestServerWithPostgreSql/clientDataDB_swagger.png')}/>
 
 ## What’s next?
 
-If your code works in the local development, you are ready to push your changes to GIT and try to build and deploy your new component version to the CodeNOW environment. For more information, see [Application Deployment](https://vitsestak.github.io/code_now/docs/admMan/depApp/) and [Monitoring](https://vitsestak.github.io/code_now/docs/admMan/depMon/), just make sure to **change the application.yaml properties from the local to the production setup.**
+If your code works in the local development, you are ready to push your changes to GIT and try to build and deploy your new component version to the CodeNOW environment. For more information, see [Application Deployment](../admMan/depApp/) and [Monitoring](../admMan/depMon/), just make sure to **change the application.yaml properties from the local to the production setup.**
 
 - Check the [Get New PostgreSQL](https://accounts.google.com/signin/v2/identifier?continue=https%3A%2F%2Fdrive.google.com%2Fa%2Fstratox.cz%2Fopen%3Fid%3D1lgWTgsGxnYmgJqqq21htQjJZ-QrJsgSAnkcGscd_GGE&service=wise&hd=stratox.cz&sacu=1&flowName=GlifWebSignIn&flowEntry=AddSession) user manual to get CodeNOW managed component properties. 
-- See the tutorial [Micronaut REST server with Redis and Kafka](https://vitsestak.github.io/code_now/docs/javMicExa/micResSerRedAndKaf/).
+- See the tutorial [Micronaut REST server with Redis and Kafka](../javMicExa/micResSerRedAndKaf/).

@@ -26,11 +26,11 @@ This example project can be cloned from: ```git@gitlab.factory.innobank.codenow.
 ## Prerequisites
 
 - Prepare your local development environment for CodeNOW with Java Spring Boot. 
-  - Follow the tutorial instructions in [Java Spring Boot Local Development](https://vitsestak.github.io/code_now/docs/locDevWitCodNow/locDev/).
+  - Follow the tutorial instructions in [Java Spring Boot Local Development](../locDevWitCodNow/locDev/).
 - Run Apache Kafka locally. 
-  - Use docker compose as described in the section *Docker compose and third-party tools* of the [Java Spring Boot Local Development](https://vitsestak.github.io/code_now/docs/locDevWitCodNow/locDev/) tutorial. 
+  - Use docker compose as described in the section *Docker compose and third-party tools* of the [Java Spring Boot Local Development](../locDevWitCodNow/locDev/) tutorial.
 - Create a new component
-   - For details see the section *Prerequisites* of the [Java Spring Boot Local Development](https://vitsestak.github.io/code_now/docs/locDevWitCodNow/locDev/) tutorial. 
+   - For details see the section *Prerequisites* of the [Java Spring Boot Local Development](../locDevWitCodNow/locDev/) tutorial.
 
 ## Steps
 
@@ -54,7 +54,7 @@ Open your IDE, import created component and start coding:
     ```
 
 - Next prepare the configuration for the Kafka logging client:
-  - Go to the Kafka administration console ([http://localhost:9000](http://localhost:9000/) if using Kafdrop from our [Java Spring Local Development](https://vitsestak.github.io/code_now/docs/locDevWitCodNow/locDev/) manual.) and create a new topic **client-logging**
+  - Go to the Kafka administration console ([http://localhost:9000](http://localhost:9000/) if using Kafdrop from our [Java Spring Local Development](../locDevWitCodNow/locDev/) manual.) and create a new topic **client-logging**
   - Add maven dependency to your pom.xml
 
     ```java
@@ -168,6 +168,6 @@ Open your IDE, import created component and start coding:
 
 ## What’s next?
 
-If your code works in the local development, you are ready to push your changes to GIT and try to build and deploy your new component version to the CodeNOW environment. For more information, see [Application Deployment](https://vitsestak.github.io/code_now/docs/admMan/depApp/) and [Monitoring](https://vitsestak.github.io/code_now/docs/admMan/depMon/), just make sure to **change application.yaml properties from the local to the production setup.**
+If your code works in the local development, you are ready to push your changes to GIT and try to build and deploy your new component version to the CodeNOW environment. For more information, see [Application Deployment](../admMan/depApp/) and [Monitoring](../admMan/depMon/), just make sure to **change application.yaml properties from the local to the production setup.**
 
-- Check [Get New Apache Kafka](https://vitsestak.github.io/code_now/docs/manComAdm/getNewApaKaf/) for setup in the CodeNOW environment.
+- Check [Get New Apache Kafka](../manComAdm/getNewApaKaf/) for setup in the CodeNOW environment.
