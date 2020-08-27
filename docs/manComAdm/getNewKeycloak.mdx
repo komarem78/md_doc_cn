@@ -1,0 +1,56 @@
+---
+id: getNewKey
+title: Get new Keycloak
+---
+
+import useBaseUrl from "@docusaurus/useBaseUrl";
+
+🕓 10 minutes
+
+## What you’ll learn
+- How to create a new instance of the [Keycloak](https://www.keycloak.org/) as a managed service in the CodeNow.
+- How to setup Keycloak basics.
+
+
+
+## Keycloak installation
+
+1. Choose the _Get New Services_ in the _Marketplace_ menu.
+2. Add selected service Keycloak.
+3. Type new instance service name, choose the box and environment for deployment, and confirm it.
+4. Wait for request processing and see the details of the new Keycloak instance.
+5. Open Keycloak admin panel, use admin credentials provided under your service details to log in.
+6. Use the admin panel link and generated credentials for sign in to [Keycloak admin console](https://www.keycloak.org/docs/latest/getting_started/index.html#logging-into-the-admin-console) .
+
+## Keycloak basics setup
+
+1. Create a new realm by clicking at "Add realm" button. It appears in popup menu at the top of left navigation pane. Confirm and leave it with defaults. Note: think of realm as a "security domain" for your future applications.
+
+   <img alt="keycloak add realm" src={useBaseUrl('img/manComAdm/getNewKeycloak/keycloak_add_realm.png')} /> <br/><br/>
+
+2. Click "Clients" and create a new client. The term "client" here refers to our application, so name it accordingly (for example: api). After creation, fill in **mandatory** field "Valid Redirect URIs" (you can enter any value, we will not be using it in this tutorial). Leave other settings to defaults and save your changes.
+
+3. Add new role in menu "Roles / Add Role", name it for example "api-role".
+
+4. Navigate to "Users / Add User" and create a new user, name it for example "api-user". Now go to "Credentials" tab and enter a new password, uncheck "Temporary" switch and click "Set Password". Next, select "Role Mappings" and assign our role (api-role) to this user.
+
+5. Last thing we need to do is to write down our authorization endpoint. We will need it later  in our application. It is composed of the base URL of your Keycloak instance + "/auth". For example https://mfr-keycloak-keycloak.box.codenow-dev.codenow.com/auth
+
+6. We are done with basic Keycloak setup. For more information see [Keycloak official site](https://www.keycloak.org/docs/latest/getting_started/index.html#logging-into-the-admin-console).
+
+
+## Screenshots - has to updated
+
+Step 1,2,3
+
+<img alt="redis1" src={useBaseUrl('img/manComAdm/getNewRedis/redis1.png')} />
+<br/><br/>
+
+Step 5a
+
+<img alt="redis2" src={useBaseUrl('img/manComAdm/getNewRedis/redis2.png')} />
+<br/><br/>
+
+Step 5b
+
+<img alt="redis3" src={useBaseUrl('img/manComAdm/getNewRedis/redis3.png')} />
