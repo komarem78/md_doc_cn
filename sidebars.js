@@ -19,7 +19,7 @@ module.exports = {
             "Users administration": ['useAdm/invNewCol', 'useAdm/reg', 'useAdm/sshSet'],
         },
         {
-            "Managed components administration": ['manComAdm/getNewApaKaf', 'manComAdm/getNewPos', 'manComAdm/getNewRed'],
+            "Managed components administration": ['manComAdm/getNewApaKaf', 'manComAdm/getNewPos', 'manComAdm/getNewRed', 'manComAdm/getNewKey'],
         }
         ]
     }

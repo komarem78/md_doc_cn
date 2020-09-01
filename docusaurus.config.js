@@ -1,7 +1,7 @@
 module.exports = {
   title: 'CodeNOW Documentation',
   tagline: 'The tagline of my site',
-  url: 'https://your-docusaurus-test-site.com',
+  url: 'https://komarem78.github.io',
   baseUrl: '/',
   onBrokenLinks: 'throw',
   favicon: 'img/CN-icon-40x42px-dark-forwhite-bg.png',
