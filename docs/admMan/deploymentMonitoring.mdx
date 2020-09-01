@@ -22,10 +22,6 @@ How to find the deployment status of your application and components in various 
     - There is a tile overview of all the deployed components.
 3. Click on the selected component tile and see the deployment status.
 
-## What’s next?
-
-Click the link to learn more about [Argo CD](https://argoproj.github.io/argo-cd/).
-
 ## Screenshots
 
 Step 1 and 2
@@ -36,3 +32,33 @@ Step 1 and 2
 Step 3
 
 <img alt="manArgo3" src={useBaseUrl('img/admMan/deploymentMonitoring/ManArgo3.png')} />
+
+## Unhealthy components
+
+If your deployment sync has failed, you can monitor the unhealthy component logs to see what went wrong.
+To find the logs section, you will need to:
+1. Click on the selected component.
+2. Go to the _LOGS_ section.
+3. Select your application name.
+4. There you will find stack trace for your specific component. 
+
+## Screenshots
+
+Step 1
+
+<img alt="logStep_1" src={useBaseUrl('img/admMan/deploymentMonitoring/UnhCompStep1.png')} />
+<br/><br/>
+
+Step 2
+
+<img alt="logStep_2" src={useBaseUrl('img/admMan/deploymentMonitoring/UnhCompStep2.png')} />
+<br/><br/>
+
+Step 3
+
+<img alt="logStep_3" src={useBaseUrl('img/admMan/deploymentMonitoring/UnhCompStep3.png')} />
+<br/><br/>
+
+## What’s next?
+
+Click the link to learn more about [Argo CD](https://argoproj.github.io/argo-cd/).
