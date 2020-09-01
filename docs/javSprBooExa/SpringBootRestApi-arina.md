@@ -1,0 +1,157 @@
+---
+id: sprBooResApi
+title: Java Spring Boot REST API
+---
+
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
+🕓 45 minutes
+
+## What you will learn: 
+How to setup your application for: 
+
+- getting data from REST API,
+- providing data to REST API.
+
+In this tutorial, we will create a simple Java component with the Java Spring Boot scaffolder. We want to expose the single REST endpoint for getting user details for his username only. This will require simple sequential orchestration of two REST services, one to get user roles and second for basic user details.
+
+<img alt="diagram" src={useBaseUrl('img/javSprBooExa/javaSpringBootRestApi/ClientInfoService.png')}/>
+
+
+## Project source
+This example project can be cloned from: git@gitlab.factory.innobank.codenow.com:innobank/aia-spring-boot-rest-api.git
+
+## Prerequisites
+
+- Prepare your local development environment for CodeNOW with Spring Boot. 
+
+    - Follow the tutorial instructions in the [Java Spring Boot Local Development](../locDevWitCodNow/locDev/) tutorial.
+
+- Create a new component.
+
+    - For details see the section *Prerequisites* of the [Java Spring Boot Local Development](../locDevWitCodNow/locDev/) tutorial.
+
+## Steps
+Open your IDE, import the created component and start coding:
+
+- Define the message payload. Here is an example of ClientInfo, which is a simple POJO with basic user details and roles:
+    - Generate getters and setters with your IDE.
+    - Examples of the ClientData and ClientAuthorization classes can be found in the example project repository.
+
+```java
+    01 package org.example.service.model;
+    02
+    03 import java.time.LocalDate;
+    04 import java.util.Set;
+    05
+    06 public class ClientInfo {
+    07
+    08     private String username;
+    09     private String firstname;
+    10     private String surname;
+    11     private LocalDate birthdate;
+    12     private Set<String> roles;
+    13 }
+```
+- Next, create classes ClientDataService and ClientAuthorizationService with the @Service annotation. These classes will represent http clients for calling the orchestrated endpoints. Example for ClientDataService: 
+    - For more details about Spring Boot @Service annotation visit this page: https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/stereotype/Service.html
+    - For more details about Spring Boot WebClients use this link: https://docs.spring.io/spring-boot/docs/2.1.0.RELEASE/reference/html/boot-features-webclient.html 
+    - Create a new Java class:
+```java
+    01 package org.example.service.service;
+    02 
+    03 import org.example.service.model.ClientData;
+    04 import org.springframework.stereotype.Service;
+    05 import org.springframework.web.reactive.function.client.WebClient;
+    06 import reactor.core.publisher.Flux;
+    07
+    08 @Service
+    09 public class ClientDataService {
+    10
+    11     private final WebClient webClient;
+    12
+    13     public ClientDataService(WebClient.Builder webClientBuilder) {
+    14         this.webClient = webClientBuilder.baseUrl("http://client-data-service").build();
+    15     }
+    16 
+    17     public Flux<ClientData> getClientData(String username) {
+    18         return this.webClient
+    19             .get()
+    20             .uri("/data/{username}", username)
+    21             .retrieve()
+    22             .bodyToFlux(ClientData.class);
+    23
+    24     }
+    25 }
+
+```
+- In the baseUrl(), you should put url to your existing component.
+
+- Create a new controller and put all parts together: 
+    - For more detailt about Spring Boot controllers see: https://docs.spring.io/spring/docs/3.0.0.M4/reference/html/ch15s03.html
+
+    - Create a new class ClientInfoController: 
+```java
+    01 package org.example.service.controller;
+    02
+    03 import org.example.service.model.ClientData;
+    04 import org.example.service.model.ClientInfo;
+    05 import org.example.service.model.ClientAuthorization;
+    06 import org.example.service.service.ClientDataService;
+    07 import org.example.service.service.ClientAuthorizationService;
+    08 import org.slf4j.Logger;
+    09 import org.slf4j.LoggerFactory;
+    10 import org.springframework.web.bind.annotation.GetMapping;
+    11 import org.springframework.web.bind.annotation.PathVariable;
+    12 import org.springframework.web.bind.annotation.RequestMapping;
+    13 import org.springframework.web.bind.annotation.RestController;
+    14 import reactor.core.publisher.Flux;
+    15
+    16 @RestController
+    17 @RequestMapping("data")
+    18 public class ClientInfoController {
+    19
+    20     private Logger log = LoggerFactory.getLogger(ClientInfoController.class);
+    21
+    22     private ClientDataService clientDataService;
+    23     private ClientAuthorizationService clientAuthorizationService;
+    24
+    25     public ClientInfoController(ClientDataService clientDataService, ClientAuthorizationService clientAuthorizationService) {
+    26         this.clientDataService = clientDataService;
+    27         this.clientAuthorizationService = clientAuthorizationService;
+    28     }
+    29
+    30     @GetMapping("/clients/{username}")
+    31     public Flux<ClientInfo> getClientInfo(@PathVariable String username) {
+    32         log.info("GET client by username: {}", username);
+    33
+    34         Flux<ClientData> clientDataFlux = clientDataService.getClientData(username);
+    35         Flux<ClientAuthorization> clientRolesFlux = clientAuthorizationService.getClientAuthorization(username);
+    36
+    37         return clientDataFlux.zipWith(clientRolesFlux, (data, roles) -> {
+    38             ClientInfo response = new ClientInfo();
+    39 
+    40             response.setUsername(data.getUsername());
+    41             response.setFirstname(data.getFirstname());
+    42             response.setSurname(data.getSurname());
+    43             response.setBirthdate(data.getBirthdate());
+    44             response.setRoles(roles.getRoles());
+    45
+    46             return response;
+    47         });
+    48     }
+    49 }
+```
+- Try to build and run the application in your IDE. After startup, you should be able to access your new controller`s swagger: http://localhost:8080/swagger/index.html
+
+    - For the correct setup, check the README.md file in the project root or see the tutorial [Java Spring Boot Local Development](../locDevWitCodNow/locDev/), section *Prepare local development IDE*.
+    - The component exposes a simple GET endpoint and can be tested using a browser call only. You should not forget to document your API and use the swagger-ui accordingly.
+
+
+<img alt="swagger" src={useBaseUrl('img/javSprBooExa/javaSpringBootRestApi/swagger-ui.png')}/>
+    
+
+
+## What’s next?
+
+If your code works in the local development, you are ready to push your changes to GIT and try to build and deploy your new component version to the CodeNOW environment. For more information, see [Application Deployment](https://www.codenow.com/docs/administration-manuals/deploy-application/) and [Monitoring](https://www.codenow.com/docs/administration-manuals/deployment-monitoring/).
