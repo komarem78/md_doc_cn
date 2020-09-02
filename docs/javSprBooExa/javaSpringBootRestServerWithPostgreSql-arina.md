@@ -36,50 +36,49 @@ This example project can be cloned from: ```git@gitlab.factory.innobank.codenow.
 
 Open your IDE, import created component and start coding:
 
+- Add these maven dependencies to your pom.xml file:
+      
+    ```xml
+      01  <dependency>
+      02      <groupId>javax.persistence</groupId>
+      03      <artifactId>javax.persistence-api</artifactId>
+      04      <version>2.2</version>
+      05  </dependency>
+    ```
+
+    ```xml
+      01  <dependency>
+      02      <groupId>org.springframework.boot</groupId>
+      03      <artifactId>spring-boot-starter-data-jpa</artifactId>
+      04      <version>2.3.3.RELEASE</version>
+      05  </dependency>
+    ```  
+
 - Define jpa entity Client. This simple table will store basic client data:
-
-    - Add these maven dependencies to your pom.xml file: 
-
-        ```java
-        01  <dependency>
-        02      <groupId>javax.persistence</groupId>
-        03      <artifactId>javax.persistence-api</artifactId>
-        04      <version>2.2</version>
-        05  </dependency>
-        ```
-
-        ```java
-        01  <dependency>
-        02      <groupId>org.springframework.boot</groupId>
-        03      <artifactId>spring-boot-starter-data-jpa</artifactId>
-        04      <version>2.3.3.RELEASE</version>
-        05  </dependency>
-        ```  
-
 
     - Generate getters and setters with your IDE
 
-    ```java
-    01  package org.example.service.repository.entity;
-    02   
-    03  import java.time.LocalDate;
-    04 
-    05  import javax.persistence.Entity;
-    06  import javax.persistence.GeneratedValue;
-    07  import javax.persistence.Id;
-    08 
-    09  @Entity
-    10  public class Client {
-    11      @Id
-    12      @GeneratedValue
-    13      private Long id;
-    14 
-    15      private String username;
-    16      private String firstname;
-    17      private String surname;
-    18      private LocalDate birthdate;
-    19  }
-    ```
+      ```java
+      01  package org.example.service.repository.entity;
+      02   
+      03  import java.time.LocalDate;
+      04 
+      05  import javax.persistence.Entity;
+      06  import javax.persistence.GeneratedValue;
+      07  import javax.persistence.Id;
+      08 
+      09  @Entity
+      10  public class Client {
+      11      @Id
+      12      @GeneratedValue
+      13      private Long id;
+      14 
+      15      private String username;
+      16      private String firstname;
+      17      private String surname;
+      18      private LocalDate birthdate;
+      19  }
+      ```
 
 - Create a new ClientRepository, which is a basic CRUD interface for Spring Boot data DB access:
     - For more detailt about Spring Boot @Repository annotation see: https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/stereotype/Repository.html
