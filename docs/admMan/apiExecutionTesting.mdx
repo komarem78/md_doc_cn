@@ -22,7 +22,16 @@ After the application deployment, you want to execute components APIs and see th
     - Learn more about the Swagger UI on https://swagger.io/tools/swagger-ui/ or this [youtube demo](https://www.youtube.com/watch?v=Nymyc8-WeHM) can also help.
     - Often you are looking for traceID from the response header. This traceID e.g. helps you analyze interactions in distributed tracing systems. 
     -  If your swagger-ui does not reflect latest changes in your component's API, make sure you modified swagger.yml file inside your component. 
-    
+5. You can use traceID to see detailed logs of your application. 
+    - To be able to see them, you can go to _"Logging and tracing"_ section, choose _"Logging"_ and paste your traceID into the query field in the appropriate format
+        ```java
+            {traceId="your traceId"}
+        ```
+    - You can also change the time range if you click on the clock icon in the top right corner.
+6. TraceID is also used for analyzing your tracing system. 
+    - For tracing information, go to _"Logging and tracing"_ section, this time choose  _"Tracing"_ and paste your traceID into the input field.
+    - Here you can see, how components interact with each other inside your application.
+
 ## Screenshots
 
 Step 1
@@ -40,3 +49,15 @@ Step 4
 <img alt="api4_1" src={useBaseUrl('img/admMan/apiExecutionTesting/api4.png')} />
 <br/><br/>
 <img alt="api4_2" src={useBaseUrl('img/admMan/apiExecutionTesting/api4_2.png')} />
+
+Step 5
+
+<img alt="api5_1" src={useBaseUrl('img/admMan/apiExecutionTesting/api5.png')} />
+<br/><br/>
+<img alt="api5_2" src={useBaseUrl('img/admMan/apiExecutionTesting/api5_2.png')} />
+
+Step 6
+
+<img alt="api6_1" src={useBaseUrl('img/admMan/apiExecutionTesting/api6.png')} />
+<br/><br/>
+<img alt="api6_2" src={useBaseUrl('img/admMan/apiExecutionTesting/api6_2.png')} />

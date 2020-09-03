@@ -1,0 +1,193 @@
+---
+id: sprBooResSerPosSQL
+title: Java Spring Boot REST Server with PostgreSQL
+---
+
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
+🕓 45 minutes
+
+## What you’ll learn
+
+How to setup your application for : 
+
+- connecting to PostgreSQL database,
+- getting data from REST API, 
+- providing data to REST API. 
+
+In this tutorial, we will create a simple java component with Java Micronaut Data scaffolder with connection to PostgreSQL database storage. We want to expose a single REST endpoint for getting the basic client data information, creating a microservice CRUD layer above DB storage.
+
+<img alt="clientDataDB" src={useBaseUrl('img/javSprBooExa/javaSpringBootRestWithPostgreSql/SpringDataDB.png')}/>
+
+## Project source
+
+This example project can be cloned from: ```git@gitlab.factory.innobank.codenow.com:innobank/aia-spring-data-db.git```
+
+## Prerequisites 
+
+- Prepare your local development environment for CodeNOW with Spring Boot. 
+  - Follow the tutorial instructions in the [Java Spring Boot Local Development](../locDevWitCodNow/locDev/) tutorial.
+- Run PostgreSQL locally. 
+  - Use docker compose as described in the section *Docker compose and third-party tools* of the [Java Spring Boot Local Development](../locDevWitCodNow/jlocDev) tutorial.
+- Create a new component
+  - For details see the section *Prerequisites* of the [Java Spring Boot Local Development](../locDevWitCodNow/locDev/) tutorial.
+
+## Steps
+
+Open your IDE, import created component and start coding:
+
+- Add these maven dependencies to your pom.xml file:
+      
+    ```xml
+      01  <dependency>
+      02      <groupId>javax.persistence</groupId>
+      03      <artifactId>javax.persistence-api</artifactId>
+      04      <version>2.2</version>
+      05  </dependency>
+    ```
+
+    ```xml
+      01  <dependency>
+      02      <groupId>org.springframework.boot</groupId>
+      03      <artifactId>spring-boot-starter-data-jpa</artifactId>
+      04      <version>2.3.3.RELEASE</version>
+      05  </dependency>
+    ```  
+
+- Define jpa entity Client. This simple table will store basic client data:
+
+    - Generate getters and setters with your IDE
+
+      ```java
+      01  package org.example.service.repository.entity;
+      02   
+      03  import java.time.LocalDate;
+      04 
+      05  import javax.persistence.Entity;
+      06  import javax.persistence.GeneratedValue;
+      07  import javax.persistence.Id;
+      08 
+      09  @Entity
+      10  public class Client {
+      11      @Id
+      12      @GeneratedValue
+      13      private Long id;
+      14 
+      15      private String username;
+      16      private String firstname;
+      17      private String surname;
+      18      private LocalDate birthdate;
+      19  }
+      ```
+
+- Create a new ClientRepository, which is a basic CRUD interface for Spring Boot data DB access:
+    - For more detailt about Spring Boot @Repository annotation see: https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/stereotype/Repository.html
+
+    ```java
+    01  package org.example.service.repository;
+    02
+    03  import org.example.service.repository.entity.Client;
+    04  import org.springframework.data.jpa.repository.JpaRepository;
+    05  import org.springframework.stereotype.Repository;
+    06
+    07  @Repository
+    08  public interface ClientRepository extends JpaRepository<Client, Long> {
+    09    Client getClientByUsername(String username);
+    10  }
+    ```
+
+- Create a new controller and put all the parts together
+  - For more detailt about Spring Boot controllers see: https://docs.spring.io/spring/docs/3.0.0.M4/reference/html/ch15s03.html  
+
+    ```java
+    01  package org.example.service.controller;
+    02 
+    03  import org.example.service.repository.ClientRepository;
+    04  import org.example.service.repository.entity.Client;
+    05  import org.springframework.beans.factory.annotation.Autowired;
+    06  import org.springframework.web.bind.annotation.GetMapping;
+    07  import org.springframework.web.bind.annotation.PathVariable;
+    08  import org.springframework.web.bind.annotation.RequestMapping;
+    09  import org.springframework.web.bind.annotation.RestController;
+    10  import reactor.core.publisher.Flux;
+    11  
+    12  import javax.validation.constraints.NotNull;
+    13  import java.util.List;
+    14  
+    15  
+    16  @RestController
+    17  @RequestMapping("/db")
+    18  public class ClientDataController {
+    19  
+    20      private final ClientRepository clientRepository;
+    21  
+    22      @Autowired
+    23      public ClientDataController(ClientRepository clientRepository) {
+    24          this.clientRepository = clientRepository;
+    25      }
+    26      
+    27      @GetMapping("/clients")
+    28      public List<Client> listClients() {
+    29          return clientRepository.findAll();
+    30      }
+    31      
+    32      @GetMapping("/clients/{username}")
+    33      public Flux<Client> getClient(@PathVariable @NotNull String username) {
+    34          return Flux.just(clientRepository.getClientByUsername(username));
+    35      }
+    36  }
+    ```
+
+- Next prepare database configuration:
+  - Go to the PgAdmin console ([http://localhost:5050](http://localhost:5050) if using compose-postgre from our Local development manual) and create a new db client-db with the scheme **client-data**.
+  - Add maven dependency to your pom.xml: 
+
+    ```java
+    01  <dependency>
+    02      <groupId>org.postgresql</groupId>
+    03      <artifactId>postgresql</artifactId>
+    04      <version>42.2.11</version>
+    05  </dependency>
+    ```
+
+- Now change the configuration in *config/application.yaml*:
+  - Fill {db user} and {db password} according to your configuration
+  - Make sure you follow yaml syntax (especially whitespaces)
+
+    ```java
+    01    server:
+    02        port: 8080
+    03    spring:
+    04        main:
+    05            banner-mode: off
+    06        zipkin:
+    07            enabled: false
+    08        datasource:
+    09            url: jdbc:postgresql://localhost:5432/client-db?currentSchema=client-data
+    10            username: {db user}
+    11            password: {db password}
+    12            driverClassName: org.postgresql.Driver
+    13        jpa:
+    14            properties:
+    15                hibernate:
+    16                    dialect: org.hibernate.dialect.PostgreSQL95Dialect
+    17    management:
+    18        endpoints:
+    19            web:
+    20                exposure:
+    21                    include: health, prometheus
+    ```
+
+- Try to build and run the application in your IDE. After startup, you should be able to access your new controller’s swagger: [http://localhost:8080/swagger/index.html](http://localhost:8080/swagger/index.html)
+  - For correct setup, check Readme.md in project root or see the tutorial [Java Spring Boot Local Development](../locDevWitCodNow/locDev/), section *Prepare local development IDE*
+
+<img alt="clientDataDBSwagger1" src={useBaseUrl('img/javSprBooExa/javaSpringBootRestWithPostgreSql/DataDBSwagger1.png')}/>
+
+<img alt="clientDataDBSwagger1" src={useBaseUrl('img/javSprBooExa/javaSpringBootRestWithPostgreSql/DataDBSwagger2.png')}/>
+
+## What’s next?
+
+If your code works in the local development, you are ready to push your changes to GIT and try to build and deploy your new component version to the CodeNOW environment. For more information, see [Application Deployment](../admMan/depApp/) and [Monitoring](../admMan/depMon/), just make sure to **change the application.yaml properties from the local to the production setup.**
+
+- Check the [Get New PostgreSQL](https://accounts.google.com/signin/v2/identifier?continue=https%3A%2F%2Fdrive.google.com%2Fa%2Fstratox.cz%2Fopen%3Fid%3D1lgWTgsGxnYmgJqqq21htQjJZ-QrJsgSAnkcGscd_GGE&service=wise&hd=stratox.cz&sacu=1&flowName=GlifWebSignIn&flowEntry=AddSession) user manual to get CodeNOW managed component properties. 
+- See the tutorial [Java Spring Boot REST server with Kafka](../javSprBooExa/resApiAndKafMesPub/).
