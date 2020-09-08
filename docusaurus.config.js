@@ -22,9 +22,9 @@ module.exports = {
         },
 
     navbar: {
-      title: '',
+      title: 'test',
       logo: {
-        alt: 'Codonow',
+        alt: 'Codenow',
         src: 'img/whiteLogo.png',
         href: 'https://www.codenow.com/',
       },
