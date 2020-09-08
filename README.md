@@ -1,33 +1,34 @@
-# Website
+# CodeNOW documentation 
 
-This website is built using [Docusaurus 2](https://v2.docusaurus.io/), a modern static website generator.
+CodeNOW documentation is written in the Markdown and website is built using [Docusaurus 2](https://v2.docusaurus.io/), a modern static website generator.
 
-### Installation
+### How to  write/update CodeNOW documentation
 
-```
-$ yarn
-```
+1. Make the local copy of the repo: TBD. Temporary on the ?????
 
-### Local Development
+2. Install docusaurus locally.
 
-```
-$ yarn start
-```
+    Use your command line interface and install the Docusaurus in the main repo directory using following command
 
-This command starts a local development server and open up a browser window. Most changes are reflected live without having to restart the server.
+    ```
+    yarn install
+    ```
+    Note: You have to have installed yarn before. 
 
-### Build
+3. Start Docusaurus locally.
 
-```
-$ yarn build
-```
+    Use your command line interface and start the Docusaurus using following command. 
+      
+    ```
+    yarn run start --port 80 --host 0.0.0.0
+    ```
+4. See the documentation on the http://localhost:3000/.
 
-This command generates static content into the `build` directory and can be served using any static contents hosting service.
+5. The primary source of the markdown documentation is stored in the ***./docs/*** (sub)directories. 
 
-### Deployment
+6. Images are stored in the  ***./static/img/*** (sub)directories. 
 
-```
-$ GIT_USER=<Your GitHub username> USE_SSH=true yarn deploy
-```
+7. Create a new branch (named by JIRA number and description) or updating ang creating new documentation.
 
-If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
+8. See more information about [Docusaurus 2](https://v2.docusaurus.io/). 
+
