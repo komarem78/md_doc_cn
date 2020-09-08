@@ -45,6 +45,9 @@ How to deploy the application into the CodeNOW environment.
       - Explicit configuration for each environment should not be required if you use dns endpoint names, ie http://component-name
       - If required, configuration for local development is possible using profiles and application-{profile}.yml configuration file.
 6. Deploy the application. 
+7. If you made some changes in your component project and want to know, how these changes will affect the whole application, then you can create a preview build of the component.
+    - You don`t need to create a new application package and/or new deployment configuration. 
+      - Preview build will use the existing environment configuration and will be automatically propagated to the deployed application.
 
 ## Screenshots
 
@@ -101,4 +104,8 @@ Step 5.1
 Step 5.2
 
 <img alt="dep5.2" src={useBaseUrl('img/admMan/deployApplication/dep5_2.png')} />
+<br/><br/>
+
+Step 7.1
+<img alt="dep7.1" src={useBaseUrl('img/admMan/deployApplication/dep7_1.png')} />
 <br/><br/>
