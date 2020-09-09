@@ -17,8 +17,8 @@
   --ifm-code-font-size: 95%;
 }
 
-a {
-  color: #262f4d;
+a, a:hover {
+  color: rgb(21, 176, 228);
 }
 
 .menu__link {
@@ -76,10 +76,6 @@ a {
 }
 
 .table-of-contents__link:hover {
-  color: rgb(21, 176, 228);
-}
-
-a:hover {
   color: rgb(21, 176, 228);
 }
 
