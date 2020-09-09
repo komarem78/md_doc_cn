@@ -13,7 +13,8 @@ module.exports = {
             "Local development with CodeNOW": ['locDevWitCodNow/locDev'],
         },
         {
-            "Java Spring Boot Complex Examples": ['javSprBooExa/resApiAndKafMesPub'],
+            "Java Spring Boot Complex Examples": ['javSprBooExa/resApiAndKafMesPub',
+                            'javSprBooExa/sprBooResApi', 'javSprBooExa/sprBooResSerPosSQL'],
         },
         {
             "Users administration": ['useAdm/invNewCol', 'useAdm/reg', 'useAdm/sshSet'],
