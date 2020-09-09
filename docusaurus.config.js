@@ -22,7 +22,7 @@ module.exports = {
         },
 
     navbar: {
-      title: 'test',
+      title: '',
       logo: {
         alt: 'Codenow',
         src: 'img/whiteLogo.png',
